@@ -3,6 +3,12 @@
 This is a project I am currently working to monitor my personal productivity
 and keep track of daily tasks.
 
+Coded with:
+HTML/CSS
+Javascript
+ReactJS
+Styled Components
+
 Feel free to clone and use as you please.
 
 For more information please contact info@keelsdesign.co.uk
