@@ -1,5 +1,7 @@
 # Hi, welcome to the Task App by Keelan Jonathan
 
+![Image of Keelan Jon Task App Design](./src/image/tasks-screen.png)
+
 This is a project I am currently working to monitor my personal productivity
 and keep track of daily tasks.
 
