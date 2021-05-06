@@ -18,9 +18,8 @@ const Container = styled.div`
   position: relative;
 
   background: ${(props) => props.theme.main.primaryColor};
-  padding: 0% 5%;
-  max-width: 1440px;
-  height: 100vh;
+  padding: 2rem;
+  max-width: 580px;
+
   margin: auto auto;
-  overflow-y: hidden;
 `;

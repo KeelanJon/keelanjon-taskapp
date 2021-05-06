@@ -2,42 +2,41 @@ import React from "react";
 import styled from "styled-components";
 import { TiTick } from "react-icons/ti";
 import { MdClose, MdDone } from "react-icons/md";
+import { Card, Row, Col, Button } from "react-bootstrap";
 
 //image imports
 
 function TaskCard(props) {
   return (
-    <GradientWrapper>
-      <CardContainer>
-        <CardInfoWrapper>
-          <CardText>
-            <h3>{props.title}</h3>
-            <p>{props.time}</p>
-          </CardText>
-        </CardInfoWrapper>
+    <Card
+      style={{
+        background: "#Fafafa ",
+        border: "1px solid #DEE2E6",
+        borderRadius: "4px",
+      }}
+    >
+      <Card.Body style={{ padding: ".5rem .5rem" }}>
+        <Row
+          style={{ padding: "0 1rem" }}
+          className="d-flex justify-content-between align-items-center"
+        >
+          <Card.Title style={{ fontSize: ".8rem", margin: "0" }}>
+            {props.title} {props.time}
+          </Card.Title>
 
-        <CardButtons>
-          <button
+          <Button
+            variant="primary"
             onClick={function () {
               {
                 props.deleteFunction(props.title);
               }
             }}
           >
-            <MdClose />
-          </button>
-          <button
-            onClick={function () {
-              {
-                props.completeFunction(props.title);
-              }
-            }}
-          >
-            <MdDone />
-          </button>
-        </CardButtons>
-      </CardContainer>
-    </GradientWrapper>
+            Delete
+          </Button>
+        </Row>
+      </Card.Body>
+    </Card>
   );
 }
 

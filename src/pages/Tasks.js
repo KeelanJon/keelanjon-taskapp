@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TaskCard from "../components/TaskCard";
 import Header from "../components/Header";
@@ -10,8 +10,13 @@ import PrimaryButton from "../components/buttons/PrimaryButton";
 import Layout from "../components/Layout";
 import AddButton from "../components/buttons/AddButton";
 
+//Bootstrap components
+import { Form } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+
 //Icon imports
 import { GrFormClose, GrClose } from "react-icons/gr";
+import { Rainbow } from "react-bootstrap-icons";
 
 function Tasks() {
   const [tasks, updateTasks] = useState([]);
@@ -26,6 +31,12 @@ function Tasks() {
   const [completeTasks, setCompletedTasks] = useState(0);
   const [projectCount, setProjectCount] = useState(0);
   const [taskCount, setTaskCount] = useState(0);
+
+  React.useEffect(function () {
+    var temp = localStorage.getItem("storedTasks");
+    console.log(localStorage.getItem("storedTasks"));
+    updateTasks(JSON.parse([temp]));
+  }, []);
 
   //function to handle form text changes for both task name and time
   function handleChange(e) {
@@ -46,11 +57,11 @@ function Tasks() {
     let newTask = { taskTitle: text, taskTime: timeText };
 
     updateTasks([newTask, ...tasks]);
-    toggleTaskMenu();
+    localStorage.setItem("storedTasks", JSON.stringify([newTask, ...tasks]));
+
+    //Resets input
     updateText("");
     updateTimeText("");
-    console.log(newTask);
-
     e.preventDefault();
   }
 
@@ -66,6 +77,7 @@ function Tasks() {
       return item.taskTitle != taskName;
     });
 
+    localStorage.setItem("storedTasks", JSON.stringify(newList));
     updateTasks(newList);
   }
 
@@ -89,61 +101,85 @@ function Tasks() {
     console.log(taskFormState);
   }
 
+  //Here we're implementing some functions to save the tasks to local storage! :D
+
+  function loadTasks() {
+    var tempTasks = null;
+
+    localStorage.getItem("storedTasks", tempTasks);
+
+    if (tempTasks != null) {
+      updateTasks(JSON.parse(tempTasks));
+    } else {
+      console.log("No tasks yet");
+    }
+  }
+
+  function saveTasks() {
+    localStorage.setItem("storedTasks", JSON.stringify(tasks));
+    console.log(JSON.stringify(tasks));
+
+    var tempVar = localStorage.getItem("storedTasks");
+    console.log(tempVar);
+  }
+
+  function startApp() {
+    console.log("We're on the grid");
+    loadTasks();
+  }
+
   return (
     <Layout>
       <Container>
-        <Header />
-        <StyledGrid>
-          <WelcomeMsg />
-          <TaskCounter
-            overview={taskCount}
-            complete={completeTasks}
-            projects={projectCount}
-          />
-          <TaskForm state={taskFormState}>
-            <ButtonWrapper>
-              <CloseButton onClick={toggleTaskMenu} />
-            </ButtonWrapper>
-
-            <form
+        <Row style={{ marginBottom: "1rem" }}>
+          <Col>
+            <Header />
+            <Form
               onSubmit={function (e) {
                 handleSubmit(e);
               }}
             >
-              <input
-                onChange={handleChange}
-                placeHolder="New task"
-                value={text}
-              />
-              <input
-                onChange={handleTimeChange}
-                placeholder="Time"
-                value={timeText}
-              ></input>
-              <PrimaryButton type="submit" onSubmit={handleSubmit}>
-                Add
-              </PrimaryButton>
-            </form>
-            <a href="https://keelsdesign.co.uk">
-              <p>By Keelan Jon</p>
-            </a>
-          </TaskForm>
-          <TaskList>
-            <h3>
-              {tasks.map(function (item, index) {
-                return (
-                  <TaskCard
-                    title={item.taskTitle}
-                    time={item.taskTime}
-                    deleteFunction={handleDelete}
-                    completeFunction={handleComplete}
-                  ></TaskCard>
-                );
-              })}
-            </h3>
-          </TaskList>
-          <Toolbar toggleMenu={toggleTaskMenu} />
-        </StyledGrid>
+              <Form.Group>
+                <Form.Label>New task</Form.Label>
+                <Form.Control
+                  type="text"
+                  onChange={handleChange}
+                  placeHolder="New task"
+                  value={text}
+                ></Form.Control>
+
+                <Form.Text style={{ padding: ".5rem 0" }}>
+                  What time are you going to do this?
+                </Form.Text>
+                <Form.Control
+                  placeHolder="time"
+                  type="text"
+                  onChange={handleTimeChange}
+                  value={timeText}
+                ></Form.Control>
+              </Form.Group>
+
+              <Button type="submit" onSubmit={handleSubmit}>
+                Add Task
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            {tasks.map(function (item, index) {
+              return (
+                <TaskCard
+                  title={item.taskTitle}
+                  time={item.taskTime}
+                  deleteFunction={handleDelete}
+                  completeFunction={handleComplete}
+                ></TaskCard>
+              );
+            })}
+          </Col>
+        </Row>
       </Container>
     </Layout>
   );
@@ -151,7 +187,7 @@ function Tasks() {
 
 export default Tasks;
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   height: 100%;
   h1 {
     color: ${(props) => props.theme.main.primaryText};
@@ -166,8 +202,9 @@ const StyledGrid = styled.div`
 `;
 
 const TaskList = styled.div`
-  height: 40vh;
-  overflow-y: scroll;
+  ${"" /* height: 40vh;
+  overflow-y: scroll; */}
+  width: 100%;
 `;
 
 const TaskForm = styled.div`

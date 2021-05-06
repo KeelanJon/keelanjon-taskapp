@@ -3,9 +3,9 @@ import { ThemeProvider } from "styled-components";
 
 const theme = {
   main: {
-    primaryColor: "#0F1116",
+    primaryColor: "#fafafa",
     secondaryColor: "#0D0D0D",
-    primaryText: "#FAFAFA",
+    primaryText: "#0F1116",
     secondaryText: "#6F7073",
     gradientBackground: ["#8743FF", "#4136F1"],
   },
